@@ -1,0 +1,147 @@
+%YAML 1.2
+---
+name: Abrase
+file_extensions: [abe]
+scope: source.abrase
+
+variables:
+  ident: '[A-Za-z_][A-Za-z0-9_]*'
+  upper_ident: '[A-Z][A-Za-z0-9_]*'
+
+contexts:
+  main:
+    - include: comments
+    - include: strings
+    - include: numbers
+    - include: function-declarations
+    - include: type-declarations
+    - include: keywords
+    - include: builtin-types
+    - include: constructors-and-types
+    - include: function-calls
+    - include: identifiers
+    - include: operators
+    - include: punctuation
+
+  comments:
+    - match: '//.*$'
+      scope: comment.line.double-slash.abrase
+
+  strings:
+    - match: '"'
+      scope: punctuation.definition.string.begin.abrase
+      push: string-body
+    - match: "'"
+      scope: punctuation.definition.string.begin.abrase
+      push: char-body
+
+  string-body:
+    - meta_scope: string.quoted.double.abrase
+    - match: '\\(?:[ntr\\''"0]|u\{[0-9a-fA-F]+\})'
+      scope: constant.character.escape.abrase
+    - match: '\{'
+      scope: punctuation.section.interpolation.begin.abrase
+      push: interp-body
+    - match: '"'
+      scope: punctuation.definition.string.end.abrase
+      pop: true
+
+  interp-body:
+    - meta_scope: meta.interpolation.abrase
+    - match: '\}'
+      scope: punctuation.section.interpolation.end.abrase
+      pop: true
+    - match: '\.'
+      scope: punctuation.accessor.abrase
+    - match: '{{ident}}'
+      scope: variable.other.abrase
+
+  char-body:
+    - meta_scope: string.quoted.single.abrase
+    - match: '\\(?:[ntr\\''"0]|u\{[0-9a-fA-F]+\})'
+      scope: constant.character.escape.abrase
+    - match: "'"
+      scope: punctuation.definition.string.end.abrase
+      pop: true
+
+  numbers:
+    - match: '\b0[xX][0-9a-fA-F_]+\b'
+      scope: constant.numeric.integer.hexadecimal.abrase
+    - match: '\b\d[\d_]*\.\d[\d_]*(?:[eE][+-]?\d+)?\b'
+      scope: constant.numeric.float.abrase
+    - match: '\b\d[\d_]*\b'
+      scope: constant.numeric.integer.abrase
+
+  function-declarations:
+    - match: '\b(fn)\s+({{ident}})'
+      captures:
+        1: keyword.declaration.function.abrase
+        2: entity.name.function.abrase
+
+  type-declarations:
+    - match: '\b(type|effect|trait)\s+({{ident}})'
+      captures:
+        1: keyword.declaration.type.abrase
+        2: entity.name.type.abrase
+
+  keywords:
+    - match: '\b(true|false)\b'
+      scope: constant.language.boolean.abrase
+    - match: '\b(self|Self)\b'
+      scope: variable.language.abrase
+    - match: '\b(if|else|match|for|while|loop|break|continue|return)\b'
+      scope: keyword.control.abrase
+    - match: '\b(handle|resume|throw|region)\b'
+      scope: keyword.control.effect.abrase
+    - match: '\b(let|const|mut|move|thread|as|in|where)\b'
+      scope: keyword.other.abrase
+    - match: '\b(fn|type|trait|impl|effect|import|mod|pub)\b'
+      scope: keyword.declaration.abrase
+
+  builtin-types:
+    - match: '\b(Int|Float|Bool|String|Unit|Char)\b'
+      scope: storage.type.primitive.abrase
+
+  constructors-and-types:
+    - match: '\b{{upper_ident}}\b'
+      scope: storage.type.abrase
+
+  function-calls:
+    - match: '\b({{ident}})(?=\s*\()'
+      scope: variable.function.abrase
+
+  identifiers:
+    - match: '\b_\b'
+      scope: variable.language.placeholder.abrase
+    - match: '\b{{ident}}\b'
+      scope: variable.other.abrase
+
+  operators:
+    - match: '\.\.=|\.\.'
+      scope: keyword.operator.range.abrase
+    - match: '->|=>'
+      scope: keyword.operator.arrow.abrase
+    - match: '\+=|-=|\*=|/=|%='
+      scope: keyword.operator.assignment.augmented.abrase
+    - match: '==|!=|<=|>=|<|>'
+      scope: keyword.operator.comparison.abrase
+    - match: '&&|\|\||!'
+      scope: keyword.operator.logical.abrase
+    - match: '\+|-|\*|/|%'
+      scope: keyword.operator.arithmetic.abrase
+    - match: '='
+      scope: keyword.operator.assignment.abrase
+    - match: '&|\||@|\?'
+      scope: keyword.operator.abrase
+
+  punctuation:
+    - match: '[(){}\[\]]'
+      scope: punctuation.section.abrase
+    - match: ','
+      scope: punctuation.separator.abrase
+    - match: ';'
+      scope: punctuation.terminator.abrase
+    - match: ':'
+      scope: punctuation.separator.type.abrase
+    - match: '\.'
+      scope: punctuation.accessor.abrase
