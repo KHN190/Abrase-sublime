@@ -11,6 +11,7 @@ variables:
 contexts:
   main:
     - include: comments
+    - include: attributes
     - include: strings
     - include: numbers
     - include: function-declarations
@@ -24,8 +25,17 @@ contexts:
     - include: punctuation
 
   comments:
+    - match: '/\*'
+      scope: punctuation.definition.comment.begin.abrase
+      push: block-comment
     - match: '//.*$'
       scope: comment.line.double-slash.abrase
+
+  block-comment:
+    - meta_scope: comment.block.abrase
+    - match: '\*/'
+      scope: punctuation.definition.comment.end.abrase
+      pop: true
 
   strings:
     - match: '"'
@@ -67,7 +77,9 @@ contexts:
   numbers:
     - match: '\b0[xX][0-9a-fA-F_]+\b'
       scope: constant.numeric.integer.hexadecimal.abrase
-    - match: '\b\d[\d_]*\.\d[\d_]*(?:[eE][+-]?\d+)?\b'
+    - match: '\b0[bB][01_]+\b'
+      scope: constant.numeric.integer.binary.abrase
+    - match: '\b\d[\d_]*\.[\d_]+(?:[eE][+-]?\d+)?\b|\b\d[\d_]*[eE][+-]?\d+\b'
       scope: constant.numeric.float.abrase
     - match: '\b\d[\d_]*\b'
       scope: constant.numeric.integer.abrase
@@ -77,6 +89,10 @@ contexts:
       captures:
         1: keyword.declaration.function.abrase
         2: entity.name.function.abrase
+
+  attributes:
+    - match: '@{{ident}}'
+      scope: meta.annotation.abrase storage.type.annotation.abrase
 
   type-declarations:
     - match: '\b(type|effect|trait)\s+({{ident}})'
@@ -89,13 +105,13 @@ contexts:
       scope: constant.language.boolean.abrase
     - match: '\b(self|Self)\b'
       scope: variable.language.abrase
-    - match: '\b(if|else|match|for|while|loop|break|continue|return)\b'
+    - match: '\b(if|else|match|for|while|loop|break|continue)\b'
       scope: keyword.control.abrase
-    - match: '\b(handle|resume|throw|region)\b'
+    - match: '\b(handle|resume|throw|region|exn|return)\b'
       scope: keyword.control.effect.abrase
-    - match: '\b(let|const|mut|move|thread|as|in|where)\b'
+    - match: '\b(let|const|static|mut|move|as|in|where|op|alias)\b'
       scope: keyword.other.abrase
-    - match: '\b(fn|type|trait|impl|effect|import|mod|pub)\b'
+    - match: '\b(fn|type|trait|impl|effect|use|pub)\b'
       scope: keyword.declaration.abrase
 
   builtin-types:
@@ -117,21 +133,27 @@ contexts:
       scope: variable.other.abrase
 
   operators:
+    - match: '::'
+      scope: punctuation.accessor.double-colon.abrase
     - match: '\.\.=|\.\.'
       scope: keyword.operator.range.abrase
     - match: '->|=>'
       scope: keyword.operator.arrow.abrase
-    - match: '\+=|-=|\*=|/=|%='
+    - match: '<<=|>>=|\+=|-=|\*=|/=|%=|\^=|&=|\|='
       scope: keyword.operator.assignment.augmented.abrase
     - match: '==|!=|<=|>=|<|>'
       scope: keyword.operator.comparison.abrase
     - match: '&&|\|\||!'
       scope: keyword.operator.logical.abrase
+    - match: '<<|>>'
+      scope: keyword.operator.bitwise.shift.abrase
+    - match: '\^'
+      scope: keyword.operator.bitwise.xor.abrase
     - match: '\+|-|\*|/|%'
       scope: keyword.operator.arithmetic.abrase
     - match: '='
       scope: keyword.operator.assignment.abrase
-    - match: '&|\||@|\?'
+    - match: '&|\||\?'
       scope: keyword.operator.abrase
 
   punctuation:

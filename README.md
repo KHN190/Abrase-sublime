@@ -6,7 +6,7 @@ Syntax highlighting for the [Abrase](https://github.com/KHN190/Abrase) language 
 
 ### Package Control
 
-Pending submission.
+In Sublime Text, `cmd + P`, search for `Abrase`.
 
 ### Manual
 
@@ -19,13 +19,15 @@ git clone https://github.com/KHN190/Abrase-sublime \
 
 ## Coverage
 
-- `//` line comments
-- string literals with `{ident}` interpolation, char literals
-- decimal / hex integer and float literals
-- all keywords including `handle`, `resume`, `region`, `effect`
+- `//` line and `/* */` block comments
+- string literals with `{expr}` interpolation, char literals, escape sequences
+- decimal / hex / binary integer and float literals
+- all keywords: `handle`, `resume`, `throw`, `region`, `exn`, `return`, `use`, `static`, `op`, `alias`, `effect`, …
+- attributes: `@derive`, `@export`, `@copy`, `@move`, `@share`, …
 - builtin types (`Int`, `Float`, `Bool`, `String`, `Unit`, `Char`)
 - capitalized identifiers as types / variant constructors
 - declaration name highlighting for `fn`, `type`, `effect`, `trait`
+- operators: arithmetic, comparison, logical, bitwise (`^`, `<<`, `>>`), range (`..`, `..=`), `::` path separator
 
 ## License
 
