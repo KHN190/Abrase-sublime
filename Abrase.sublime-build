@@ -1,0 +1,12 @@
+{
+  "selector": "source.abrase",
+  "cmd": ["abrase", "check", "$file"],
+  "working_dir": "$file_path",
+  "line_regex": "at line ([0-9]+), col ([0-9]+): (.*)$",
+  "variants": [
+    { "name": "Run",         "cmd": ["abrase", "run", "$file"] },
+    { "name": "Run (debug)", "cmd": ["abrase", "run", "--debug", "$file"] },
+    { "name": "Disasm",      "cmd": ["abrase", "disasm", "$file"] },
+    { "name": "Explain",     "cmd": ["abrase", "explain", "$file"] }
+  ]
+}

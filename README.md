@@ -1,6 +1,7 @@
-# Abrase syntax for Sublime Text
+# Abrase for Sublime Text
 
-Syntax highlighting for the [Abrase](https://github.com/KHN190/Abrase) language (`.abe`).
+Syntax highlighting and a build system for the
+[Abrase](https://github.com/KHN190/Abrase) language (`.abe`).
 
 ## Install
 
@@ -16,6 +17,17 @@ git clone https://github.com/KHN190/Abrase-sublime \
 ```
 
 (Adjust path for Linux / Windows. Restart Sublime Text.)
+
+## Build system
+
+`Tools → Build System → Abrase`, then:
+
+- **Build** (`cmd+B`) — `abrase check`; errors are clickable (parsed from the
+  `at line N, col N` output).
+- **Build With…** (`cmd+shift+B`) — `Run`, `Run (debug)` (`--debug`), `Disasm`,
+  `Explain`.
+
+Needs the `abrase` CLI on `PATH`.
 
 ## Coverage
 
